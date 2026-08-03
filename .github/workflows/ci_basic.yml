@@ -18,3 +18,14 @@ jobs:
 
       - name: Display index.html content
         run: cat app/index.html
+        
+      - name: Display secrets and variables
+        env:
+          MY_SECRET: ${{ secrets.FAKE_API_TOKEN }}
+          MY_ENV: ${{ secrets.ENV_TYPE }}
+          CUSTOM_VAR: "Ceci est une variable publique non-secrete"
+        run: |
+          echo "OS du Runner : $RUNNER_OS"
+          echo "Variable personnalisee : $CUSTOM_VAR"
+          echo "Type d'environnement : $MY_ENV"
+          echo "Secret API : $MY_SECRET"

@@ -6,7 +6,7 @@ echo "Début des vérifications..."
 if [ -f "./app/index.html" ]; then
     echo "Succès : Le fichier index.html est bien présent."
     echo "Fin des vérifications."
-    exit 0
+    exit 1
 else
     echo "Erreur : Le fichier index.html est introuvable."
     exit 1
