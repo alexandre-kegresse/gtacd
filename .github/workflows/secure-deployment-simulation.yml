@@ -1,0 +1,45 @@
+name: Secure Deployment Simulation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validation de la configuration serveur
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          if [ -z "$SERVER_IP" ]; then echo "Erreur: SERVER_IP manquant"; exit 1; fi
+          if [ -z "$SERVER_USER" ]; then echo "Erreur: SERVER_USER manquant"; exit 1; fi
+          echo "Configuration serveur valide. IP et Utilisateur détectés."
+
+      - name: Validation de la clé SSH privée
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SSH_PRIVATE_KEY" ]; then echo "Erreur: Clé SSH manquante"; exit 1; fi
+          if ! echo "$SSH_PRIVATE_KEY" | grep -q "BEGIN.*PRIVATE KEY"; then 
+            echo "Erreur: Le format de la clé SSH semble invalide."
+            exit 1
+          fi
+          echo "Format de la clé SSH valide (2048 bits simulé, pas de passphrase)."
+
+      - name: Simulation de connexion SSH
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          echo "Simulation des commandes exécutées sur le serveur..."
+          echo ">>> ssh -i private_key $SERVER_USER@$SERVER_IP 'mkdir -p /var/www/html/app'"
+          echo ">>> ssh -i private_key $SERVER_USER@$SERVER_IP 'systemctl status nginx'"
+          echo "Contrôles de sécurité validés avec succès."

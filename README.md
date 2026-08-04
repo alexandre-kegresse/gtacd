@@ -17,3 +17,9 @@ Projet d'exploration de l'automatisation CI/CD et de la sécurisation des pipeli
 * Mise à jour du workflow pour exposer une variable prédéfinie (`RUNNER_OS`), une variable personnalisée, et les secrets.
 * Vérification de la censure automatique des secrets dans les logs par GitHub Actions.
 * Simulation d'un échec d'intégration en forçant le script `check_app.sh` à renvoyer `exit 1` pour l'analyse post-incident.
+
+### Job 4 : Préparation du Serveur de Déploiement Sécurisé avec Simulation
+* Création d'un utilisateur `deployuser` avec les moindres privilèges sur la VM cible.
+* Génération d'une clé SSH RSA (2048 bits) dédiée au déploiement automatisé, sans phrase secrète.
+* Ajout des secrets `SSH_PRIVATE_KEY`, `SERVER_IP` et `SERVER_USER` dans GitHub.
+* Création d'un workflow de simulation validant la présence des secrets, le format de la clé SSH et simulant l'exécution des commandes distantes.
