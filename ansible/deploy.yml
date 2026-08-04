@@ -1,0 +1,46 @@
+---
+- name: Déploiement de l'application Web
+  hosts: all
+  become: yes
+  tasks:
+    - name: Installer Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Créer le répertoire de destination de l'application
+      file:
+        path: /var/www/html/tp-app
+        state: directory
+        mode: '0755'
+
+    - name: Copier les fichiers de l'application
+      copy:
+        src: ../app/
+        dest: /var/www/html/tp-app/
+        mode: '0644'
+
+    - name: Configurer le serveur web Nginx via template
+      template:
+        src: nginx_vhost.conf.j2
+        dest: /etc/nginx/sites-available/tp-app.conf
+
+    - name: Activer le virtual host
+      file:
+        src: /etc/nginx/sites-available/tp-app.conf
+        dest: /etc/nginx/sites-enabled/tp-app.conf
+        state: link
+      notify: Redémarrer Nginx
+
+    - name: Supprimer la configuration par défaut de Nginx (optionnel pour éviter les conflits)
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Redémarrer Nginx
+
+  handlers:
+    - name: Redémarrer Nginx
+      service:
+        name: nginx
+        state: restarted
