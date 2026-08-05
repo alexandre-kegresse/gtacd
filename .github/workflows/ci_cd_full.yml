@@ -22,6 +22,12 @@ jobs:
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
+    # Deploiement distant desactive par defaut.
+    # La VM cible se trouve sur le reseau local de l'ecole, derriere le
+    # portail captif Alcasar : un runner GitHub public ne peut pas la joindre.
+    # Pour activer : creer la variable de depot REMOTE_DEPLOY = true
+    # (Settings > Secrets and variables > Actions > Variables).
+    if: vars.REMOTE_DEPLOY == 'true'
     
     steps:
       - name: Checkout repository
