@@ -1,0 +1,8 @@
+# Inventaire Ansible genere localement (contient l'IP du serveur cible)
+inventory.ini
+
+# Cles SSH - ne doivent JAMAIS etre versionnees
+github_deploy_key
+github_deploy_key.pub
+*.pem
+*.key
